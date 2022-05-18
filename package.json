@@ -4,8 +4,8 @@
   "description": "Fork of DocsServiceApp to continue support of the library",
   "main": "index.js",
   "scripts": {
-    "clean": "rm -rf dist",
-    "build": "npm run clean && cp -R ./src ./dist"
+    "clean": "rm -rf dist/*",
+    "build": "npm run clean && cp -r src/**/*.js dist && cp -r src/*.js dist"
   },
   "repository": {
     "type": "git",
