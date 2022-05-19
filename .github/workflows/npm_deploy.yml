@@ -4,9 +4,8 @@
 name: NPM PUBLISH
 
 on:
-  push:
-    # types: [published]
-    branches: [reshuffle-lib-structure]
+  release:
+    types: [published]
 
 jobs:
   deploy:
