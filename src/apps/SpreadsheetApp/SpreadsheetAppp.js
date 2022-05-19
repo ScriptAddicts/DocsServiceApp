@@ -59,7 +59,7 @@
           if (blob.toString() !== "Blob" || !range.row || !range.column || isNaN(range.row) || isNaN(range.column)) {
             return true;
           }
-          ({width, height, identification} = ImgApp.getSize(blob));
+          ({width, height, identification} = ImgAppp.getSize(blob));
           if (width * height > 1048576) {
             return true;
           }
@@ -84,8 +84,10 @@
             title: "SpreadsheetAppp_temp",
             mimeType: MimeType.GOOGLE_SHEETS
           }, blob).id;
+		  console.log(`LIB`, "TMP ID AFYTER INSER", tmpId);
         } catch (error) {
           e = error;
+		  console.log(`ERROR`, error);
           if (e.message === "Drive is not defined") {
             putError.call(this, "Please enable Drive API at Advanced Google services, and try again.");
           } else {
@@ -96,7 +98,7 @@
         dstSheet = dstSS.getSheetByName(this.obj.sheetName);
         dstSheetId = dstSheet.getSheetId();
         tmpSheet = SpreadsheetApp.openById(tmpId).getSheets()[0].setName(`SpreadsheetAppp_${Utilities.getUuid()}`).copyTo(dstSS);
-        DriveApp.getFileById(tmpId).setTrashed(true);
+		Drive.Files.remove(tmpId);
         tmpSheetId = tmpSheet.getSheetId();
         requests = ar.map((e) => {
           e.from.sheetId = tmpSheetId;
@@ -386,6 +388,7 @@
     };
 
     putError = function(m) {
+	  	console.log(`ERROR WITH LIB`, m);
       throw new Error(`${m}`);
     };
 

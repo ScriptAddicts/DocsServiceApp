@@ -1,0 +1,27 @@
+{
+  "name": "@scriptaddicts/docsserviceapp",
+  "version": "1.0.4",
+  "description": "Fork of DocsServiceApp to continue support of the library",
+  "main": "index.js",
+  "scripts": {
+    "clean": "rm -rf dist/*",
+    "build": "npm run clean && copyfiles src/**/*.js dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ScriptAddicts/DocsServiceApp.git"
+  },
+  "keywords": [],
+  "author": "tanaikech",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ScriptAddicts/DocsServiceApp/issues"
+  },
+  "homepage": "https://github.com/ScriptAddicts/DocsServiceApp#readme",
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com/ScriptAddicts"
+  },
+  "devDependencies": {
+    "copyfiles": "^2.4.1"
+  }
+}
