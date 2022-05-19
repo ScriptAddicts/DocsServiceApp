@@ -1,6 +1,6 @@
 {
   "name": "@scriptaddicts/docsserviceapp",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Fork of DocsServiceApp to continue support of the library",
   "main": "index.js",
   "scripts": {
