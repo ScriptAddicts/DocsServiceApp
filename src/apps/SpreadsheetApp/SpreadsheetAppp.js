@@ -55,17 +55,16 @@
       insertImage(objAr_) {
         var ar, blob, dstSS, dstSheet, dstSheetId, e, requests, tmpId, tmpSheet, tmpSheetId, xlsxObj;
         if (!Array.isArray(objAr_) || (objAr_.some(({blob, range}) => {
-          var height, identification, width;
+          var identification;
           if (blob.toString() !== "Blob" || !range.row || !range.column || isNaN(range.row) || isNaN(range.column)) {
+            console.log('[DocsServiceApp]', 'Issue with Blob or range coordinates')
             return true;
           }
-          ({width, height, identification} = ImgAppp.getSize(blob));
-          if (width * height > 1048576) {
-            return true;
-          }
+          ({identification} = ImgAppp.getSize(blob));
           if (!(["GIF", "PNG", "JPG"].some((e) => {
             return e === identification;
           }))) {
+            console.log('[DocsServiceApp]', 'Issue with file format', 'received', identification)
             return true;
           }
           return false;
@@ -84,7 +83,6 @@
             title: "SpreadsheetAppp_temp",
             mimeType: MimeType.GOOGLE_SHEETS
           }, blob).id;
-		  console.log(`LIB`, "TMP ID AFYTER INSER", tmpId);
         } catch (error) {
           e = error;
 		  console.log(`ERROR`, error);
