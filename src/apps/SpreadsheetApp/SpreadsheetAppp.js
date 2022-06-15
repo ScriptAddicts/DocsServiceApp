@@ -137,13 +137,22 @@
         dstSS = SpreadsheetApp.openById(this.obj.spreadsheetId);
         dstSheet = dstSS.getSheetByName(this.obj.sheetName);
         dstSheetId = dstSheet.getSheetId();
-		    const tempFileName =`SpreadsheetAppp_temp_${dstSS.getId()}` 
-    		console.log('[DocsServiceApp]', 'attempting to generate temp file for ->', dstSS.getId(), dstSS.getName(), dstSheetId)
+        const tempFileName = `SpreadsheetAppp_temp_${dstSS.getId()}`;
+        console.log(
+          "[DocsServiceApp]",
+          "attempting to generate temp file for ->",
+          dstSS.getId(),
+          dstSS.getName(),
+          dstSheetId
+        );
         try {
-          tmpId = Drive.Files.insert({
-            title: tempFileName,
-            mimeType: MimeType.GOOGLE_SHEETS
-          }, blob).id;
+          tmpId = Drive.Files.insert(
+            {
+              title: tempFileName,
+              mimeType: MimeType.GOOGLE_SHEETS,
+            },
+            blob
+          ).id;
         } catch (error) {
           e = error;
           console.log(`ERROR`, error);
@@ -156,8 +165,11 @@
             putError.call(this, e.message);
           }
         }
-        tmpSheet = SpreadsheetApp.openById(tmpId).getSheets()[0].setName(`SpreadsheetAppp_${Utilities.getUuid()}`).copyTo(dstSS);
-    		Drive.Files.remove(tmpId);
+        tmpSheet = SpreadsheetApp.openById(tmpId)
+          .getSheets()[0]
+          .setName(`SpreadsheetAppp_${Utilities.getUuid()}`)
+          .copyTo(dstSS);
+        Drive.Files.remove(tmpId);
         tmpSheetId = tmpSheet.getSheetId();
         requests = ar.map((e) => {
           e.from.sheetId = tmpSheetId;
