@@ -78,9 +78,14 @@
         createDrawing1Xml_.call(this, xlsxObj, ar);
         drawing1XmlRels_.call(this, xlsxObj, ar);
         blob = xlsxObjToBlob.call(this, xlsxObj);
+        dstSS = SpreadsheetApp.openById(this.obj.spreadsheetId);
+        dstSheet = dstSS.getSheetByName(this.obj.sheetName);
+        dstSheetId = dstSheet.getSheetId();
+		const tempFileName =`SpreadsheetAppp_temp_${dstSS.getId()}` 
+		console.log('[DocsServiceApp]', 'attempting to generate temp file for ->', dstSS.getId(), dstSS.getName(), dstSheetId)
         try {
           tmpId = Drive.Files.insert({
-            title: "SpreadsheetAppp_temp",
+            title: tempFileName,
             mimeType: MimeType.GOOGLE_SHEETS
           }, blob).id;
         } catch (error) {
@@ -92,9 +97,6 @@
             putError.call(this, e.message);
           }
         }
-        dstSS = SpreadsheetApp.openById(this.obj.spreadsheetId);
-        dstSheet = dstSS.getSheetByName(this.obj.sheetName);
-        dstSheetId = dstSheet.getSheetId();
         tmpSheet = SpreadsheetApp.openById(tmpId).getSheets()[0].setName(`SpreadsheetAppp_${Utilities.getUuid()}`).copyTo(dstSS);
 		Drive.Files.remove(tmpId);
         tmpSheetId = tmpSheet.getSheetId();
