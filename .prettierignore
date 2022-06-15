@@ -1,0 +1,4 @@
+package-lock.json
+dist/
+*.md
+*.yml
