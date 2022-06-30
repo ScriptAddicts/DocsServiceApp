@@ -256,9 +256,15 @@
 				"Request URL ->",
 				url
 			)
-      obj = UrlFetchApp.fetch(url, {
-        headers: this.headers,
-      });
+			try {
+				console.log("[FPR-859] Request headers -> ", JSON.stringify(this.headers || {}))
+				obj = UrlFetchApp.fetch(url, {
+					headers: this.headers,
+				});
+				console.log("[FPR-859] Successfull MS file export response ->", obj.getResponseCode())
+			} catch (err) {
+				console.log("[FPR-859] Errored MS file export response -> ", obj.getResponseCode())
+			}
       if (obj.getResponseCode() !== 200) {
         putError.call(
           this,
