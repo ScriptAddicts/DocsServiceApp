@@ -249,6 +249,13 @@
     gToM = function () {
       var obj, url;
       url = `https://www.googleapis.com/drive/v3/files/${this.obj.spreadsheetId}/export?mimeType=${MimeType.MICROSOFT_EXCEL}`;
+			console.log(
+				"[FPR-859] Requesting MS export",
+				"Library object ->",
+				JSON.stringify(this.obj || {}),
+				"Request URL ->",
+				url
+			)
       obj = UrlFetchApp.fetch(url, {
         headers: this.headers,
       });
