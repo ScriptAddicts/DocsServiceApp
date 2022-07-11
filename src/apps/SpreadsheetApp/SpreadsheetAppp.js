@@ -184,6 +184,8 @@
           if (tmpId) {
             Drive.Files.remove(tmpId);
           }
+
+          throw err;
         }
         tmpSheetId = tmpSheet.getSheetId();
         requests = ar.map((e) => {
