@@ -165,11 +165,26 @@
             putError.call(this, e.message);
           }
         }
-        tmpSheet = SpreadsheetApp.openById(tmpId)
-          .getSheets()[0]
-          .setName(`SpreadsheetAppp_${Utilities.getUuid()}`)
-          .copyTo(dstSS);
-        Drive.Files.remove(tmpId);
+        try {
+          const tmpSpreadsheet = SpreadsheetAppp.openById(tmpId);
+          tmpSheet = tmpSpreadsheet.getSheets()[0];
+          tmpSheet.setName(`SpreadsheetAppp_${Utilities.getUuid()}`);
+          tmpSheet.copyTo(dstSS);
+
+          Drive.Files.remove(tmpId);
+        } catch (err) {
+          // in case of failure remove Temp generated file to avoid spamming
+          console.log(
+            "[DocsServiceApp]",
+            "Error copying tmp file into destination",
+            err.name,
+            err.message
+          );
+
+          if (tmpId) {
+            Drive.Files.remove(tmpId);
+          }
+        }
         tmpSheetId = tmpSheet.getSheetId();
         requests = ar.map((e) => {
           e.from.sheetId = tmpSheetId;
