@@ -166,7 +166,7 @@
           }
         }
         try {
-          const tmpSpreadsheet = SpreadsheetAppp.openById(tmpId);
+          const tmpSpreadsheet = SpreadsheetApp.openById(tmpId);
           tmpSheet = tmpSpreadsheet.getSheets()[0];
           tmpSheet.setName(`SpreadsheetAppp_${Utilities.getUuid()}`);
           tmpSheet.copyTo(dstSS);
