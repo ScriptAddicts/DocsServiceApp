@@ -165,11 +165,28 @@
             putError.call(this, e.message);
           }
         }
-        tmpSheet = SpreadsheetApp.openById(tmpId)
-          .getSheets()[0]
-          .setName(`SpreadsheetAppp_${Utilities.getUuid()}`)
-          .copyTo(dstSS);
-        Drive.Files.remove(tmpId);
+        try {
+          const tmpSpreadsheet = SpreadsheetAppp.openById(tmpId);
+          tmpSheet = tmpSpreadsheet.getSheets()[0];
+          tmpSheet.setName(`SpreadsheetAppp_${Utilities.getUuid()}`);
+          tmpSheet.copyTo(dstSS);
+
+          Drive.Files.remove(tmpId);
+        } catch (err) {
+          // in case of failure remove Temp generated file to avoid spamming
+          console.log(
+            "[DocsServiceApp]",
+            "Error copying tmp file into destination",
+            err.name,
+            err.message
+          );
+
+          if (tmpId) {
+            Drive.Files.remove(tmpId);
+          }
+
+          throw err;
+        }
         tmpSheetId = tmpSheet.getSheetId();
         requests = ar.map((e) => {
           e.from.sheetId = tmpSheetId;
@@ -249,22 +266,31 @@
     gToM = function () {
       var obj, url;
       url = `https://www.googleapis.com/drive/v3/files/${this.obj.spreadsheetId}/export?mimeType=${MimeType.MICROSOFT_EXCEL}`;
-			console.log(
-				"[FPR-859] Requesting MS export",
-				"Library object ->",
-				JSON.stringify(this.obj || {}),
-				"Request URL ->",
-				url
-			)
-			try {
-				console.log("[FPR-859] Request headers -> ", JSON.stringify(this.headers || {}))
-				obj = UrlFetchApp.fetch(url, {
-					headers: this.headers,
-				});
-				console.log("[FPR-859] Successfull MS file export response ->", obj.getResponseCode())
-			} catch (err) {
-				console.log("[FPR-859] Errored MS file export response -> ", obj.getResponseCode())
-			}
+      console.log(
+        "[FPR-859] Requesting MS export",
+        "Library object ->",
+        JSON.stringify(this.obj || {}),
+        "Request URL ->",
+        url
+      );
+      try {
+        console.log(
+          "[FPR-859] Request headers -> ",
+          JSON.stringify(this.headers || {})
+        );
+        obj = UrlFetchApp.fetch(url, {
+          headers: this.headers,
+        });
+        console.log(
+          "[FPR-859] Successfull MS file export response ->",
+          obj.getResponseCode()
+        );
+      } catch (err) {
+        console.log(
+          "[FPR-859] Errored MS file export response -> ",
+          obj.getResponseCode()
+        );
+      }
       if (obj.getResponseCode() !== 200) {
         putError.call(
           this,
