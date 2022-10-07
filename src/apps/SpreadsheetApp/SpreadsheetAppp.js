@@ -165,11 +165,12 @@
             putError.call(this, e.message);
           }
         }
+				let tempSheetInDestFile;
         try {
           const tmpSpreadsheet = SpreadsheetApp.openById(tmpId);
           tmpSheet = tmpSpreadsheet.getSheets()[0];
           tmpSheet.setName(`SpreadsheetAppp_${Utilities.getUuid()}`);
-          tmpSheet.copyTo(dstSS);
+          tempSheetInDestFile = tmpSheet.copyTo(dstSS);
 
           Drive.Files.remove(tmpId);
         } catch (err) {
@@ -189,7 +190,7 @@
         }
         tmpSheetId = tmpSheet.getSheetId();
         requests = ar.map((e) => {
-          e.from.sheetId = tmpSheetId;
+          e.from.sheetId = tempSheetInDestFile.getSheetId();
           e.to.sheetId = dstSheetId;
           return {
             copyPaste: {
@@ -217,7 +218,7 @@
             putError.call(this, e.message);
           }
         }
-        dstSS.deleteSheet(tmpSheet);
+        dstSS.deleteSheet(tempSheetInDestFile);
         return null;
       }
 
